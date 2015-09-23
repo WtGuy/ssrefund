@@ -3,7 +3,7 @@ main: com.serendipitymc.refund.refund.refund
 author: nickewa
 dev-url: http://www.serendiptymc.com
 description: A semi-automated refund system for serendipity servers
-version: 1.0.8-ac2f
+version: 1.0.9-6883
 commands:
     refund-add:
         description: Used to add items to refund request

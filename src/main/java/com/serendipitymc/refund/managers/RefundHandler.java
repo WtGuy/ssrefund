@@ -169,21 +169,27 @@ public class RefundHandler {
 		ResultSet rs = sh.executeQuery("SELECT r.refund_id, r.player, r.status, r.created_at, r.opened_by, count(rd.detail_id), sum(rd.amount), r.servername FROM " + thRefund + " r LEFT OUTER JOIN " + thRefundDetail + " rd ON r.refund_id = rd.refund_id WHERE r.status IN ('open', 'in progress', 'signed off') GROUP BY 1 ORDER BY r.refund_id ASC LIMIT "+ lowNumber + ", 10");
 		staffmember.sendMessage(ChatColor.GOLD + "-----List-of-pending-refunds------");
 		staffmember.sendMessage(ChatColor.GOLD + "ID , Player , OpenedBy , Unique Items , Total items , Status, Created At, Server");
+		
 		while (rs.next()) {
-			String message = "#" + rs.getInt(1);
-			message = message + ", " + rs.getString(2);
-			message = message + ", " + rs.getString(5);
-			message = message + ", " + rs.getInt(6);
-			message = message + ", " + rs.getInt(7);
-			message = message + ", " + rs.getString(3);
-			message = message + ", " + rs.getString(4);
-			message = message + ", " + rs.getString(8);
-			sendSummary(staffmember, message);
+			String finalMessage = "";
+			finalMessage = finalMessage + ChatColor.GOLD + "#" + rs.getInt(1) + " ";
+			finalMessage = finalMessage + ChatColor.DARK_GREEN + rs.getString(4) + " ";
+			finalMessage = finalMessage + "[" + rs.getInt(6) + "]" + " ";
+			
+			String statusVar = rs.getString(3);
+			if (statusVar.equals("signed off"))
+				finalMessage = finalMessage + ChatColor.GREEN + rs.getString(2) + " ";
+			else
+				finalMessage = finalMessage + ChatColor.RED + rs.getString(2) + " ";
+				
+			finalMessage = finalMessage + ChatColor.GRAY + rs.getString(8) + " ";
+			finalMessage = finalMessage + ChatColor.RED + "[" + rs.getString(3) + "]";
+      
+			sendSummary(staffmember, finalMessage);
  		}
 		staffmember.sendMessage(ChatColor.GOLD + "-----End-of-pending-refunds------");
 		staffmember.sendMessage(ChatColor.GOLD + "Do /refund list <page> to see more");
 		rs.close();
-		
 	}
 	
 	public void showPlayerHistoryBrief(Player staffmember, String player) throws SQLException {
